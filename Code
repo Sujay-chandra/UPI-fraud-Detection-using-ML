@@ -1,0 +1,125 @@
+1st Box:
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+# Display plots inline in the notebook
+%matplotlib inline
+
+# Load the dataset
+# Replace 'transactions.csv' with the path to your dataset file
+df = pd.read_csv('upi_transactions.csv')
+
+# Display the first 5 rows to understand the data
+print("Initial Data:")
+print(df.head())
+
+# Get a summary of the data
+print("\nData Information:")
+df.info()
+
+2nd Box:
+# Check for null values
+print("\nMissing values in the dataset:")
+print(df.isnull().sum())
+
+# Check the distribution of the target variable 'is_fraud'
+print("\nDistribution of fraudulent vs non-fraudulent transactions:")
+print(df['is_fraud'].value_counts())
+print(df['is_fraud'].value_counts(normalize=True))
+
+# Visualize the distribution of transaction types
+# The original code had 'type' column, but it was not present in the dataframe.
+# Instead, I will visualize 'sender_type' and 'receiver_type'
+plt.figure(figsize=(10, 6))
+sns.countplot(x='sender_type', data=df)
+plt.title('Distribution of Sender Types')
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.countplot(x='receiver_type', data=df)
+plt.title('Distribution of Receiver Types')
+plt.show()
+
+
+# Visualize the relationship between transaction type and fraud
+# Again, using 'sender_type' and 'receiver_type' instead of 'type'
+plt.figure(figsize=(10, 6))
+sns.countplot(x='sender_type', hue='is_fraud', data=df)
+plt.title('Fraudulent Transactions by Sender Type')
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.countplot(x='receiver_type', hue='is_fraud', data=df)
+plt.title('Fraudulent Transactions by Receiver Type')
+plt.show()
+
+
+# Handle categorical data by one-hot encoding relevant columns
+# The original code attempted to one-hot encode 'type', which was not in the dataframe.
+# I will encode 'sender_type' and 'receiver_type' instead.
+df = pd.get_dummies(df, columns=['sender_type', 'receiver_type'], drop_first=True)
+
+# Drop irrelevant or redundant columns (e.g., transaction_id)
+df = df.drop(['transaction_id'], axis=1)
+
+# Display the preprocessed data
+print("\nPreprocessed Data:")
+print(df.head())
+
+3rd box:
+# Separate features (X) and target variable (y)
+X = df.drop('is_fraud', axis=1)
+y = df['is_fraud']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+# stratify=y ensures that the proportion of fraud cases is the same in both the training and testing sets.
+
+# Scale the numerical features to improve model performance
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+print(f"\nShape of X_train: {X_train_scaled.shape}")
+print(f"Shape of X_test: {X_test_scaled.shape}")
+
+4th Box:
+# Initialize and train the Random Forest Classifier
+model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+model.fit(X_train_scaled, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test_scaled)
+
+# Evaluate the model
+print("\nModel Evaluation:")
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# Visualize the Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()
+
+# Get feature importance to see which features the model found most useful
+feature_importances = pd.DataFrame({
+    'feature': X.columns,
+    'importance': model.feature_importances_
+}).sort_values(by='importance', ascending=False)
+
+print("\nFeature Importances:")
+print(feature_importances)
