@@ -1,26 +1,31 @@
-# UPI-fraud-Detection-using-ML
-This project focuses on detecting fraudulent transactions in Unified Payments Interface (UPI) systems using machine learning algorithms. The goal is to identify potentially malicious activities in real-time based on transaction patterns, user behavior, and anomaly detection techniques. 
+# UPI Transactions Analysis 
 
-Features:
-Preprocessing and cleaning of UPI transaction data
-Exploratory Data Analysis (EDA) to identify key fraud indicators
-Feature engineering to extract behavioral and transactional features
-Model training using various algorithms:
-Logistic Regression
-Random Forest
-XGBoost
-Neural Networks
-Performance evaluation using metrics like accuracy, precision, recall, F1-score, and ROC-AUC
-Real-time prediction interface (optional: Flask/Streamlit)
-Visualizations and insights from the dataset
+This project analyzes a dataset of UPI (Unified Payments Interface) transactions to uncover insights such as:
 
-Technologies Used:
-Python
-Scikit-learn
-Pandas, NumPy
-Matplotlib, Seaborn
-Jupyter Notebook
+- Most used transaction types
+- Spending patterns by age group or day of the week
+- Fraud detection using machine learning models
 
-Dataset:
-Synthetic or anonymized UPI transaction dataset
-Includes fields like transaction ID, amount, sender/receiver ID, timestamp, device ID, location, and fraud label
+## Tech Stack
+
+- Python
+- Pandas, NumPy
+- Matplotlib, Seaborn
+- Scikit-learn
+- Jupyter Notebook
+
+##  Files
+
+- `UPI_Transactions.ipynb`: Main notebook containing all analysis, visualizations, and modeling.
+- `DataSets/upi_transactions_2024.csv`: The DataSet has been uploaded here for direct use but it has been originally taken from :- https://www.kaggle.com/datasets/skullagos5246/upi-transactions-2024-dataset
+
+
+##  Getting Started
+
+1. Clone the repository.
+2. Create a virtual environment and install dependencies.
+3. Open `UPI_Transactions.ipynb` in JupyterLab or VS Code.
+
+---
+
+Feel free to contribute or suggest improvements!
